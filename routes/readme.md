@@ -1,0 +1,1 @@
+The routes in this file must belong to the 'routes' package as that is how they are imported into the server.go file
