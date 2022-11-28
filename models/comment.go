@@ -27,23 +27,18 @@ func (c Comment) GetComment() Comment {
 
 	defer db.Close()
 
-	queryStatement := `SELECT users.user_name, comments.user_id, comments.comment_content, comments.date_created, comments.date_edited 
+	queryStatement := `SELECT users.user_name, comments.comment_id, comments.post_id, comments.user_id, comments.comment_content, comments.date_created, comments.date_edited 
 	FROM comments 
 	INNER JOIN users ON comments.user_id=users.user_id 
 	WHERE comment_id=$1`
-	rows, err := db.Query(queryStatement, c.CommentID)
-	CheckError(err)
-
+	row := db.QueryRow(queryStatement, c.CommentID)
 	var comment Comment
-	defer rows.Close()
-	for rows.Next() {
-		err = rows.Scan(&comment.Author, &comment.UserID, &comment.Content, &comment.DateCreated, &comment.EditDate)
-		CheckError(err)
-	}
+	err = row.Scan(&comment.Author, &comment.CommentID, &comment.PostID, &comment.UserID, &comment.Content, &comment.DateCreated, &comment.EditDate)
+	CheckError(err)
 
 	// Gets the number of likes on a Comment
 	numLikesQuery := `SELECT COUNT(user_id) FROM comment_likes WHERE comment_id=$1`
-	row := db.QueryRow(numLikesQuery, c.CommentID)
+	row = db.QueryRow(numLikesQuery, c.CommentID)
 	err = row.Scan(&comment.NumOfLikes)
 	CheckError(err)
 

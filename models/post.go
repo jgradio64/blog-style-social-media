@@ -29,25 +29,18 @@ func (p Post) GetPost() Post {
 
 	defer db.Close()
 
-	queryStatement := `SELECT posts.user_id, posts.post_content, posts.post_title, posts.post_date, posts.edit_date, users.user_name 
+	queryStatement := `SELECT posts.post_id, posts.user_id, posts.post_content, posts.post_title, posts.post_date, posts.edit_date, users.user_name 
 	FROM posts 
 	INNER JOIN users ON posts.user_id=users.user_id 
 	WHERE post_id=$1`
-
-	rows, err := db.Query(queryStatement, p.PostID)
-	CheckError(err)
-
+	row := db.QueryRow(queryStatement, p.PostID)
 	var post Post
-	
-	defer rows.Close()
-	for rows.Next() {
-		err = rows.Scan(&post.UserID, &post.PostContent, &post.PostTitle, &post.PostDate, &post.EditDate, &post.Author)
-		CheckError(err)
-	}
+	err = row.Scan(&post.PostID ,&post.UserID, &post.PostContent, &post.PostTitle, &post.PostDate, &post.EditDate, &post.Author)
+	CheckError(err)
 
 	// Gets the number of likes on a post
 	numLikesQuery := `SELECT COUNT(user_id) FROM post_likes WHERE post_id=$1`
-	row := db.QueryRow(numLikesQuery, p.PostID)
+	row = db.QueryRow(numLikesQuery, p.PostID)
 	err = row.Scan(&post.NumOfLikes)
 	CheckError(err)
 
@@ -62,11 +55,20 @@ func (p Post) GetPost() Post {
 	FROM comments 
 	INNER JOIN users ON comments.user_id=users.user_id 
 	WHERE comments.post_id=$1`
-	rows, err = db.Query(commentsStatement, p.PostID)
+	rows, err := db.Query(commentsStatement, p.PostID)
+	CheckError(err)
+	defer rows.Close()
 	for rows.Next() {
 		var com Comment
 		err = rows.Scan(&com.Author, &com.CommentID, &com.UserID, &com.Content, &com.DateCreated, &com.EditDate)
 		CheckError(err)
+
+		// god this nested query loop sucks, seperate out into it's own function later?
+		numCommentLikesQuery := `SELECT COUNT(user_id) FROM comment_likes WHERE comment_id=$1`
+		row = db.QueryRow(numCommentLikesQuery, com.CommentID)
+		err = row.Scan(&com.NumOfLikes)
+
+		com.PostID = p.PostID
 		post.Comments = append(post.Comments, com)
 	}
 
