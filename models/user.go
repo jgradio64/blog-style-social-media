@@ -23,13 +23,13 @@ func (u User) GetUser() User {
 
 	defer db.Close()
 
-	rows, err := db.Query("select * from users where user_id=$1", u.UserID)
+	rows, err := db.Query("select user_id, user_name, about_user from users where user_id=$1", u.UserID)
 	CheckError(err)
 
 	var user User
 	defer rows.Close()
 	for rows.Next() {
-		err = rows.Scan(&user.UserID, &user.Username, &user.Password, &user.AboutUser)
+		err = rows.Scan(&user.UserID, &user.Username, &user.AboutUser)
 		CheckError(err)
 	}
 
