@@ -1,13 +1,11 @@
-module project
+module blbr.com/main
 
 go 1.13
 
 require (
-	github.com/google/uuid v1.3.0 // indirect
-	github.com/jackc/pgx v3.6.2+incompatible // indirect
-	github.com/jackc/pgx/v4 v4.17.2 // indirect
-	github.com/jackc/pgx/v5 v5.1.0 // indirect
-	github.com/lib/pq v1.10.7 // indirect
-	github.com/pkg/errors v0.9.1 // indirect
-	golang.org/x/crypto v0.2.0 // indirect
+	github.com/golang-jwt/jwt/v4 v4.4.2
+	github.com/google/uuid v1.3.0
+	github.com/jackc/pgx/v5 v5.1.1
+	github.com/joho/godotenv v1.4.0
+	github.com/lib/pq v1.10.7
 )
