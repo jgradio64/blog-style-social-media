@@ -47,7 +47,7 @@ func (p Post) CreatePost() {
 
 	defer db.Close()
 
-	insertStatement :=  `insert into "posts"("user_id", "post_content", "post_title", "post_date") values($1, $2, $3, $4)`
+	insertStatement :=  `INSERT INTO "posts"("user_id", "post_content", "post_title", "post_date") values($1, $2, $3, $4)`
 	_, err = db.Exec(insertStatement, p.UserID, p.PostContent, p.PostTitle, time.Now())
 	CheckError(err)
 }
