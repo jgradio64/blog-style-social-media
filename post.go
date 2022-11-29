@@ -14,10 +14,10 @@ import (
 func postHandler(w http.ResponseWriter, r *http.Request) {
 
 	if !checkSession(w, r) {
-		fmt.Fprintf(w, "<h1> User Invalid. Please Log In Again. </h1>")
+		backtologin(w, r)
 		return
 	}
-    issueList, err := template.ParseFiles("user_post.html")
+    issueList, err := template.ParseFiles("pages/user_post.html")
     checkError(err)
 	
 	//c , _ := r.Cookie("session_token")
@@ -30,6 +30,10 @@ func postHandler(w http.ResponseWriter, r *http.Request) {
 
 
 func postconfirmHandler (w http.ResponseWriter, r *http.Request) {
+	if !checkSession(w, r) {
+		backtologin(w, r)
+		return
+	}
 	host     := HOST
     port     := PORT
     dbname   := DBNAME
@@ -58,11 +62,9 @@ func postconfirmHandler (w http.ResponseWriter, r *http.Request) {
     // close database
     defer db.Close()
 	
-	insertStmt := `insert into "Posts"("UserID", "post","title","timestamp") values($1, $2, $3, $4)`
+	insertStmt := `insert into "Posts"("authorID", "post","title","timestamp") values($1, $2, $3, $4)`
     _, e := db.Exec(insertStmt, user_id, content, title, time.Now())
     checkError(e)
-	
-	
 	
 	refreshSession(w, r)
 	
@@ -70,7 +72,7 @@ func postconfirmHandler (w http.ResponseWriter, r *http.Request) {
 	
 	if f, ok := w.(http.Flusher); ok {
 			f.Flush()
-			time.Sleep(5 * time.Second)
+			time.Sleep(1 * time.Second)
 		}
 		
 

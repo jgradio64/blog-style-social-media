@@ -14,10 +14,10 @@ import (
 func usereditHandler(w http.ResponseWriter, r *http.Request) {
 
 	if !checkSession(w, r) {
-		fmt.Fprintf(w, "<h1> User Invalid. Please Log In Again. </h1>")
+		backtologin(w, r)
 		return
 	}
-    issueList, err := template.ParseFiles("user_edit.html")
+    issueList, err := template.ParseFiles("pages/user_edit.html")
     checkError(err)
 	
     err = issueList.Execute(w, nil)
@@ -27,6 +27,10 @@ func usereditHandler(w http.ResponseWriter, r *http.Request) {
 
 
 func usereditconfirmHandler (w http.ResponseWriter, r *http.Request) {
+	if !checkSession(w, r) {
+		backtologin(w, r)
+		return
+	}
 	host     := HOST
     port     := PORT
     dbname   := DBNAME
@@ -64,7 +68,7 @@ func usereditconfirmHandler (w http.ResponseWriter, r *http.Request) {
 	
 	if f, ok := w.(http.Flusher); ok {
 			f.Flush()
-			time.Sleep(5 * time.Second)
+			time.Sleep(1 * time.Second)
 		}
 		
 

@@ -12,7 +12,7 @@ import (
 
 
 func loginHandler(w http.ResponseWriter, r *http.Request) {
-    issueList, err := template.ParseFiles("user_login.html")
+    issueList, err := template.ParseFiles("pages/user_login.html")
     checkError(err)
     
     err = issueList.Execute(w, nil)
@@ -80,9 +80,9 @@ func loginconfirmHandler (w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "<h1> User %s Login Successful!</h1>" + "<p>Now go to the user homepage...</p>",user_name)
 	
 	if f, ok := w.(http.Flusher); ok {
-			f.Flush()
-			time.Sleep(5 * time.Second)
-		}
+		f.Flush()
+		time.Sleep(1 * time.Second)
+	}
 		
 
 	fmt.Fprintf(w, "<script>window.location.href=\"/homepage\";</script>") 
