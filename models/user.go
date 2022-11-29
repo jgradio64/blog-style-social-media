@@ -2,6 +2,7 @@ package models
 
 import (
 	"database/sql"
+
 	extns "blbr.com/main/extensions"
 
     _ "github.com/lib/pq"
@@ -14,6 +15,7 @@ type User struct {
 	Username 	string	`db:"user_name"`
 	Password 	string	`db:"password"`
 	AboutUser 	string	`db:"about_user"`
+	UserPosts	[]Post	`db:"user_posts"`
 }
 
 func (u User) GetUser() User {
@@ -23,10 +25,25 @@ func (u User) GetUser() User {
 
 	defer db.Close()
 
+	// Get the user's info
 	row := db.QueryRow("select user_id, user_name, about_user from users where user_id=$1", u.UserID)
 	var user User
 	err = row.Scan(&user.UserID, &user.Username, &user.AboutUser)
 	extns.CheckError(err)
+
+	// Get 10 of a users most recent posts to display on their profile.
+	queryString := `SELECT post_id, user_id, post_content, post_title, post_date, edit_date
+	 FROM posts WHERE posts.user_id=$1 
+	 ORDER BY post_date DESC LIMIT 10`
+	rows, err := db.Query(queryString, u.UserID)
+	for rows.Next() {
+		var post Post
+		err = rows.Scan(&post.PostID, &post.UserID, &post.PostContent, &post.PostTitle, &post.PostDate, &post.EditDate)
+		extns.CheckError(err)
+
+		post.Author = user.Username
+		user.UserPosts = append(user.UserPosts, post)
+	}
 
 	return user
 }
