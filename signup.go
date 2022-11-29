@@ -11,7 +11,7 @@ import (
 
 
 func signupHandler(w http.ResponseWriter, r *http.Request) {
-    issueList, err := template.ParseFiles("user_signup.html")
+    issueList, err := template.ParseFiles("pages/user_signup.html")
     checkError(err)
     
     err = issueList.Execute(w, nil)
@@ -21,15 +21,15 @@ func signupHandler(w http.ResponseWriter, r *http.Request) {
 
 func confirmHandler (w http.ResponseWriter, r *http.Request) {
 
-	host     := "localhost"
-    port     := 5432
+	host     := HOST
+    port     := PORT
     admin    := "postgres"
     admin_password := "postgres"
-    dbname   := "postgres"
+    dbname   := DBNAME
 
     user_name     := r.FormValue("Username")
-    //user_password := r.FormValue("Password")	
-	//user_about := r.FormValue("About")
+    user_password := r.FormValue("Password")	
+	user_about := r.FormValue("About")
 	
     // connection string
     psqlconn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, admin, admin_password, dbname)
@@ -50,8 +50,6 @@ func confirmHandler (w http.ResponseWriter, r *http.Request) {
 	for existUser.Next() {
 		err = existUser.Scan(&name)
 		checkError(err)
- 
-		fmt.Println(name)
 	}
 	//fmt.Println(name)
 	if name != "" {
@@ -59,7 +57,7 @@ func confirmHandler (w http.ResponseWriter, r *http.Request) {
 	} else {
 		
 		fmt.Fprintf(w, "<h1> User %s Created Successfully!</h1>" + "<p>Now go to the log in page...</p>",user_name)
-		/*
+		
 		createStmt := fmt.Sprintf("CREATE USER %s WITH PASSWORD '%s'", user_name ,user_password)
 	    _, e := db.Exec(createStmt)
 		checkError(e)
@@ -72,14 +70,14 @@ func confirmHandler (w http.ResponseWriter, r *http.Request) {
 		_, e = db.Exec(attributeStmt)
 		checkError(e)
 		
-		insertDynStmt := `insert into "Users"("UserName", "About") values($1, $2)`
-		_, e = db.Exec(insertDynStmt, user_name, user_about)
+		insertDynStmt := `insert into "Users"("UserName", "About","JoinTime") values($1, $2, $3)`
+		_, e = db.Exec(insertDynStmt, user_name, user_about, time.Now())
 		checkError(e)
 		
-		*/
+		
 		if f, ok := w.(http.Flusher); ok {
 			f.Flush()
-			time.Sleep(5 * time.Second)
+			time.Sleep(1 * time.Second)
 		}
 		
 

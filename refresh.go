@@ -7,9 +7,7 @@ import (
 )
 
 func refreshSession(w http.ResponseWriter, r *http.Request) {
-	if !checkSession(w,r) {
-		return
-	}
+	checkSession(w, r) 
 	
 	c, _ := r.Cookie("session_token")
 
