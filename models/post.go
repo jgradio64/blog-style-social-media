@@ -35,7 +35,7 @@ func (p Post) GetPost() Post {
 	WHERE post_id=$1`
 	row := db.QueryRow(queryStatement, p.PostID)
 	var post Post
-	err = row.Scan(&post.PostID ,&post.UserID, &post.PostContent, &post.PostTitle, &post.PostDate, &post.EditDate, &post.Author)
+	err = row.Scan(&post.PostID, &post.UserID, &post.PostContent, &post.PostTitle, &post.PostDate, &post.EditDate, &post.Author)
 	extns.CheckError(err)
 
 	// Gets the number of likes on a post
@@ -63,11 +63,11 @@ func (p Post) GetPost() Post {
 		err = rows.Scan(&com.Author, &com.CommentID, &com.UserID, &com.Content, &com.DateCreated, &com.EditDate)
 		extns.CheckError(err)
 
-		// god this nested query loop sucks, seperate out into it's own function later? 
-		// Would need to iterate through the comments on the post, then add the num likes to the relevant comment
+		// Gets the number of likes for each comment on the post
 		numCommentLikesQuery := `SELECT COUNT(user_id) FROM comment_likes WHERE comment_id=$1`
 		row = db.QueryRow(numCommentLikesQuery, com.CommentID)
 		err = row.Scan(&com.NumOfLikes)
+		extns.CheckError(err)
 
 		com.PostID = p.PostID
 		post.Comments = append(post.Comments, com)
@@ -110,4 +110,38 @@ func (p Post) DeletePost() {
 	deleteStatement := `DELETE FROM posts WHERE post_id=$1`
 	_, err = db.Exec(deleteStatement, p.PostID)
 	extns.CheckError(err)
+}
+
+func (p Post) GetAllPosts() []Post {
+	connectionString := extns.GetEnvVariable("CONNECTIONSTRING")
+    db, err := sql.Open("postgres", connectionString)
+	extns.CheckError(err)
+	defer db.Close()
+	var posts []Post
+
+	queryStatement := `SELECT posts.post_id, posts.user_id, posts.post_content, posts.post_title, posts.post_date, posts.edit_date, users.user_name 
+	FROM posts INNER JOIN users ON posts.user_id=users.user_id 
+	ORDER BY post_date DESC LIMIT 10`
+	rows, err := db.Query(queryStatement)
+	for rows.Next() {
+		var post Post
+		err = rows.Scan(&post.PostID, &post.UserID, &post.PostContent, &post.PostTitle, &post.PostDate, &post.EditDate, &post.Author)
+		extns.CheckError(err)
+
+		// Gets the number of likes on a post
+		numLikesQuery := `SELECT COUNT(user_id) FROM post_likes WHERE post_id=$1`
+		row := db.QueryRow(numLikesQuery, post.PostID)
+		err = row.Scan(&post.NumOfLikes)
+		extns.CheckError(err)
+
+		// Gets the number of comments on a post
+		numPostsQuery := `SELECT COUNT(comment_id) FROM comments WHERE post_id=$1`
+		row = db.QueryRow(numPostsQuery, &post.PostID)
+		err = row.Scan(&post.NumComments)
+		extns.CheckError(err)
+
+		posts = append(posts, post)
+	}
+
+	return posts
 }
