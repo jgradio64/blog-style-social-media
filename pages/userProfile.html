@@ -19,11 +19,8 @@
         </form>
         {{ else }}
         <!-- Display follow and block user buttons if the user is not the owner -->
-        <form class="form-inline my-2 mx-2 my-lg-0" action="/user/follow" method="GET">
+        <form class="form-inline my-2 mx-2 my-lg-0" action="/user/follow" method="post">
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit" value={{.TheUser.UserID}}>Follow User</button>
-        </form>
-        <form class="form-inline my-2 mx-2 my-lg-0" action="/user/block" method="GET">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit" value={{.TheUser.UserID}}>Block User</button>
         </form>
         {{ end }}
    </main>

@@ -1,0 +1,16 @@
+{{define "post_edit"}}
+{{template "header" .}}
+{{template "nav" .}}
+
+<div class="container">
+    <form action="/post/edit/?id={{.ThePost.PostID}}" method="POST">
+        <div class="form-group">
+            <label for="postText">Post Text:</label>
+            <textarea class="form-control" id="postText" name="postContent" rows="4">{{ .ThePost.PostContent }}</textarea>
+        </div>
+        <button class="btn btn-success my-2 my-sm-0" type="submit">Submit</button>
+    </form>
+</div>
+
+{{template "footer" .}}
+{{end}}

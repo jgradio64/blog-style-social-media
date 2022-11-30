@@ -1,0 +1,13 @@
+{{define "post_delete"}}
+{{template "header" .}}
+{{template "nav" .}}
+
+<div class="container">
+    <h1>Are you sure you want to delete this post?</h1>
+    <form action="/deletepostconfirm/?id={{.ThePost.PostID}}" method="post">
+        <button class="btn btn-success my-2 my-sm-0" type="submit">Confirm Deletion</button>
+    </form>
+</div>
+
+{{template "footer" .}}
+{{end}}

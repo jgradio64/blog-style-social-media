@@ -12,14 +12,8 @@
         </div>
         {{ if .IsOwner }}
         <!-- Display edit and delete user buttons if the user is not the owner -->
-        <form class="form-inline my-2 mx-2 my-lg-0" action="/post/edit" method="GET">
-			<input type="hidden" name="post_id" value="{{.ThePost.PostID}}">
-            <button class="btn btn-success my-2 my-sm-0" type="submit">Edit Post</button>
-        </form>
-        <form class="form-inline my-2 mx-2 my-lg-0" action="/post/delete" method="DELETE">
-			<input type="hidden" name="post_id" value="{{.ThePost.PostID}}">
-            <button class="btn btn-warning my-2 my-sm-0" type="submit">Delete Post</button>
-        </form>
+        <a href="/post/edit/?id={{.ThePost.PostID}}" class="btn btn-success my-2 my-sm-0">Edit Post</a>
+        <a href="/post/delete/?id={{.ThePost.PostID}}" class="btn btn-success my-2 my-sm-0">Delete Post</a>
         {{ end }}
    </main>
 

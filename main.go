@@ -36,12 +36,12 @@ func main () {
 	
 	http.HandleFunc("/post/", routes.GetPostHandler)
 	http.HandleFunc("/post/new", routes.NewPostHandler)
-	http.HandleFunc("/postconfirm", routes.NewPostConfirmHandler)
+	http.HandleFunc("/post/delete/", routes.DeletePostHandler)
+	http.HandleFunc("/post/edit/", routes.EditPostHandler)
+	http.HandleFunc("/deletepostconfirm/", routes.DeletePostConfirmHandler)
+	http.HandleFunc("/postconfirm/", routes.NewPostConfirmHandler)
 	
-	// http.HandleFunc("/userview", userviewHandler)
-	// http.HandleFunc("/userviewconfirm", userviewconfirmHandler)
-	
-	// http.HandleFunc("/postview", postviewHandler)
+	// http.HandleFunc("/userview", userviewHandler)	
 	// http.HandleFunc("/postviewconfirm", postviewconfirmHandler)
 	
 	log.Println("server running on port 8000")
