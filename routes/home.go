@@ -1,52 +1,43 @@
 package routes
-
+ 
 import (
-    "fmt"
-    // "log"
-    "net/http"
+    _ "fmt"
+	"net/http"
+	_ "time"
+	_ "html/template"
+	models "blbr.com/main/models"
+	//extns "blbr.com/main/extensions"
 )
 
-func HomeHandler(w http.ResponseWriter, r *http.Request) {
-	if r.URL.Path != "/" {
-		http.Error(w, "404 not found.", http.StatusNotFound)
-		return
-	}
-
-	if r.Method != "GET" {
-		http.Error(w, "Method is not supported.", http.StatusNotFound)
-		return
-	}
-
-
-	fmt.Fprintf(w, "This will be the home page")
+type HomepageData struct {
+	IsAuth		bool
+	AuthUserID	int
+	HomePosts	[]models.Post
 }
 
-func UserHandler(w http.ResponseWriter, r *http.Request) {
-	if r.URL.Path != "/users/" {
-		http.Error(w, "404 not found.", http.StatusNotFound)
-		return
+func HomepageHandler(w http.ResponseWriter, r *http.Request) {
+	isAuthenticated := CheckSession(w, r) 
+	if isAuthenticated {
+		c, _ := r.Cookie("session_token")
+		sessionToken := c.Value
+		userSession := sessions[sessionToken]
+
+		user := models.User{UserID: userSession.UserID}
+		var homePosts []models.Post
+		homePosts = user.GetHomePagePosts()
+		
+		newHomepageData := HomepageData{HomePosts: homePosts, IsAuth: isAuthenticated, AuthUserID: userSession.UserID}
+		page := &newHomepageData
+		renderHomePage(w, "homepage", page)
+	} else {
+		Backtologin(w, r)
 	}
-
-	if r.Method != "GET" {
-		http.Error(w, "Method is not supported.", http.StatusNotFound)
-		return
-	}
-
-
-	fmt.Fprintf(w, "This will be the home page")
 }
 
-func PostsHandler(w http.ResponseWriter, r *http.Request) {
-	if r.URL.Path != "/posts/" {
-		http.Error(w, "404 not found.", http.StatusNotFound)
-		return
-	}
-
-	if r.Method != "GET" {
-		http.Error(w, "Method is not supported.", http.StatusNotFound)
-		return
-	}
-
-
-	fmt.Fprintf(w, "This will be the home page")
+func renderHomePage(w http.ResponseWriter, tmpl string, page *HomepageData) {
+    err := templates.ExecuteTemplate(w, tmpl, page)
+    if err != nil {
+         http.Error(w, err.Error(), http.StatusInternalServerError)
+         return
+    }
 }

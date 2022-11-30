@@ -1,0 +1,23 @@
+{{define "homepage"}}
+{{template "header" .}}
+{{template "nav" .}}
+
+<div class="container text-center">
+
+    <h1>Welcome to your Homepage</h1>
+    <p>Enjoy posts by the users that you follow</p>
+
+    {{ range .HomePosts }}
+        <div class="card my-4">
+            <h4 class="card-header">Post By <a href="/user/?id={{.UserID}}">{{ .Author }}</a> on {{ .PostDate.Format "2006-01-02"}}</h4>
+            <div class="card-body">
+                <h5 class="card-title">{{ .PostTitle }}</h5>
+                <p class="card-test">{{ .PostContent }}</p>
+            </div>
+            <div class="card-footer ">{{.NumOfLikes}} Likes | {{.NumComments}} Comments</div>
+        </div>
+    {{ end }}
+</div>
+
+{{template "footer" .}}
+{{end}}
