@@ -2,7 +2,8 @@ package models
 
 import (
 	"database/sql"
-	
+	"fmt"
+	"os"
 	extns "blbr.com/main/extensions"
 
     _ "github.com/lib/pq"
@@ -26,7 +27,7 @@ func (u User) GetUser() User {
 	defer db.Close()
 
 	// Get the user's info
-	row := db.QueryRow("select user_id, user_name, about_user from users where user_id=$1", u.UserID)
+	row := db.QueryRow("SELECT user_id, user_name, about_user FROM users WHERE user_id=$1", u.UserID)
 	var user User
 	err = row.Scan(&user.UserID, &user.Username, &user.AboutUser)
 	extns.CheckError(err)
@@ -120,4 +121,62 @@ func (u User) GetHomePagePosts() []Post {
 	}
 
 	return followedUserPosts
+}
+
+func (u User) CheckUserNameExists() bool {
+	connectionString := extns.GetEnvVariable("CONNECTIONSTRING")
+    db, err := sql.Open("postgres", connectionString)
+	extns.CheckError(err)
+
+	defer db.Close()
+	userExists := false
+
+	// Get the user's info
+	queryString := `SELECT user_name FROM users WHERE user_name=$1`
+	row := db.QueryRow(queryString, u.Username)
+	var user User
+	err = row.Scan(&user.Username)
+
+	if err != nil {
+		if err.Error() == "sql: no rows in result set"{
+			// User does not exist
+			return userExists
+		} else {
+			fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", err)
+			os.Exit(1)
+		}
+	} else {
+		// User does exist, maybe?
+		userExists = true
+	}
+	return userExists
+}
+
+func (u User) ValidateUser() User {
+	connectionString := extns.GetEnvVariable("CONNECTIONSTRING")
+    db, err := sql.Open("postgres", connectionString)
+	extns.CheckError(err)
+
+	defer db.Close()
+
+	// Get the user's info
+	queryString := `SELECT user_id FROM users WHERE user_name=$1 AND password=$2`
+	row := db.QueryRow(queryString, u.Username, u.Password)
+	var validUser User
+	err = row.Scan(&validUser.UserID)
+
+	if err != nil {
+		if err.Error() == "sql: no rows in result set"{
+			// The log in info is invalid, return the empty user
+			return validUser
+		} else {
+			fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", err)
+			os.Exit(1)
+		}
+	} else {
+		// User is validated
+		validUser.Username = u.Username
+		validUser.Password = u.Password
+	}
+	return validUser
 }
