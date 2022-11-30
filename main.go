@@ -25,6 +25,8 @@ func main () {
 	http.HandleFunc("/user/new", routes.SignupHandler)
 	http.HandleFunc("/user/edit", routes.EditUserHandler)
 	http.HandleFunc("/user/delete", routes.DeleteUserHandler)
+	http.HandleFunc("/user/follow/", routes.FollowUserHandler)
+	http.HandleFunc("/user/unfollow/", routes.UnfollowUserHandler)
 	http.HandleFunc("/usereditconfirm", routes.EditUserConfirmHandler)
 	http.HandleFunc("/userdeleteconfirm", routes.DeleteUserConfirmHandler)	
 	http.HandleFunc("/signupconfirm", routes.CreateUserHandler)

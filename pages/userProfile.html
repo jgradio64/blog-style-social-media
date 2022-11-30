@@ -10,19 +10,18 @@
         <p class="lead">{{ .TheUser.AboutUser }}</p>
         </div>
         {{ if .IsOwner }}
-        <!-- Display edit and delete user buttons if the user is not the owner -->
-        <form class="form-inline my-2 mx-2 my-lg-0" action="/user/edit" method="GET">
-            <button class="btn btn-success my-2 my-sm-0" type="submit">Edit Profile</button>
-        </form>
-        <form class="form-inline my-2 mx-2 my-lg-0" action="/user/delete" method="GET">
-            <button class="btn btn-warning my-2 my-sm-0" type="submit">Delete User</button>
+        <!-- Display edit and delete user buttons if the user is the owner -->
+        <a href="/user/edit" class="btn btn-primary">Edit Profile</a>
+        <a href="/user/delete" class="btn btn-warning">Delete User</a>
+        {{ else }} {{if .IsFollower }}
+        <form class="form-inline my-2 mx-2 my-lg-0" action="/user/unfollow/?id={{.TheUser.UserID}}" method="post">
+            <button class="btn btn-info my-2 my-sm-0" type="submit">Unfollow User</button>
         </form>
         {{ else }}
-        <!-- Display follow and block user buttons if the user is not the owner -->
-        <form class="form-inline my-2 mx-2 my-lg-0" action="/user/follow" method="post">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit" value={{.TheUser.UserID}}>Follow User</button>
+        <form class="form-inline my-2 mx-2 my-lg-0" action="/user/follow/?id={{.TheUser.UserID}}" method="post">
+            <button class="btn btn-info my-2 my-sm-0" type="submit">Follow User</button>
         </form>
-        {{ end }}
+        {{ end }}{{end }}
    </main>
 
     <div class="text-center p-5">

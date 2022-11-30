@@ -2,7 +2,6 @@ package models
 
 import (
 	"database/sql"
-
 	extns "blbr.com/main/extensions"
 
     _ "github.com/lib/pq"
@@ -11,6 +10,31 @@ import (
 type FollowedUser struct {
 	UserID 			int	`db:"user_id"`
 	FollowedUserID 	int	`db:"followed_user_id"`
+}
+
+func (flw FollowedUser) GetFollowers() []int {
+	connectionString := extns.GetEnvVariable("CONNECTIONSTRING")
+	db, err := sql.Open("postgres", connectionString)
+	extns.CheckError(err)
+
+	defer db.Close()
+
+	var followerIDs []int
+
+	queryStatement := `SELECT user_id FROM followed_users WHERE followed_user_id=$1`
+	rows, err := db.Query(queryStatement, flw.FollowedUserID)
+	extns.CheckError(err)
+	defer rows.Close()
+
+	for rows.Next() {
+		var id int
+		err := rows.Scan(&id)
+		extns.CheckError(err)
+
+		followerIDs = append(followerIDs, id)
+	}
+
+	return followerIDs
 }
 
 func (flw FollowedUser) CreateFollowedUser() {
