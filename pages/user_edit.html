@@ -1,9 +1,24 @@
-<h1>Edit Your Profile</h1>
-<form action="/usereditconfirm" method="POST">
+{{define "edituser"}}
+{{template "header" .}}
+{{template "nav" .}}
 
-	<label for="About">Update Profile:</label><br>
-	​<textarea id="About" name="About" rows="6" cols="20" required></textarea><br>
+<div class="container">
+    <h1>Edit Your Profile</h1>
+	<form action="/usereditconfirm" method="POST">
+		<div class="form-group">
+			<label for="About">Update your About section: </label><br>
+			​<textarea class="form-control" id="About" name="About" rows="6" required>
+				{{- .TheUser.AboutUser -}}
+			</textarea><br>
+		</div>
+		
+		<!-- <div><input type="submit"> <input type="reset"></div> -->
+		<div>
+			<button type="submit" class="btn btn-primary">Submit</button>
+			<button type="reset" class="btn btn-secondary">Reset</button>
+		</div>
+	</form>
+</div>
 
-	<div><input type="submit"> <input type="reset"></div>
-	
-</form>
+{{template "footer" .}}
+{{end}}

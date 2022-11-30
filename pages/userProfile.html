@@ -1,0 +1,48 @@
+{{define "userprofile"}}
+{{template "header" .}}
+{{template "nav" .}}
+
+<div class="container">
+    <main class="jumbotron">
+        <div class="text-center p-5">
+        <h1>{{ .TheUser.Username }}</h1>
+        <hr>
+        <p class="lead">{{ .TheUser.AboutUser }}</p>
+        </div>
+        {{ if .IsOwner }}
+        <!-- Display edit and delete user buttons if the user is not the owner -->
+        <form class="form-inline my-2 mx-2 my-lg-0" action="/user/edit" method="GET">
+            <button class="btn btn-success my-2 my-sm-0" type="submit">Edit Profile</button>
+        </form>
+        <form class="form-inline my-2 mx-2 my-lg-0" action="/user/delete" method="GET">
+            <button class="btn btn-warning my-2 my-sm-0" type="submit">Delete User</button>
+        </form>
+        {{ else }}
+        <!-- Display follow and block user buttons if the user is not the owner -->
+        <form class="form-inline my-2 mx-2 my-lg-0" action="/user/follow" method="GET">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit" value={{.TheUser.UserID}}>Follow User</button>
+        </form>
+        <form class="form-inline my-2 mx-2 my-lg-0" action="/user/block" method="GET">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit" value={{.TheUser.UserID}}>Block User</button>
+        </form>
+        {{ end }}
+   </main>
+
+    <div class="text-center p-5">
+        <h1>{{ .TheUser.Username }}'s recent posts</h1>
+        <hr>
+    </div>
+    {{ range .TheUser.UserPosts }}
+        <div class="card my-4">
+            <h4 class="card-header">Post By <a href="/user/?id={{.UserID}}">{{ .Author }}</a> on {{ .PostDate.Format "2006-01-02"}}</h4>
+            <div class="card-body">
+                <h5 class="card-title">{{ .PostTitle }}</h5>
+                <p class="card-test">{{ .PostContent }}</p>
+            </div>
+            <div class="card-footer ">{{.NumOfLikes}} Likes | {{.NumComments}} Comments</div>
+        </div>
+    {{ end }}
+</div>
+
+{{template "footer" .}}
+{{end}}
