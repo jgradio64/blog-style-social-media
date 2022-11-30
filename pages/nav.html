@@ -1,18 +1,26 @@
 {{ define "nav"}}
      <nav class="nav nav-pills justify-content-center p-3">
           <a class="navbar-brand" href="/">Blbr</a>
-          <a class='nav-link' href='/home/'>My Homepage</a>
           <a class='nav-link' href='/all/'>All Posts</a>
-          <a class='nav-link' href='/user/'>My Profile</a>
+          {{ if .IsAuth }}
+          <a class='nav-link' href='/home/'>My Homepage</a>
+          <a class='nav-link' href='/user/?id={{.AuthUserID}}'>My Profile</a>
           <a class='nav-link' href='/post/'>Create a Post!</a>
+          {{ end }}
           <!-- Make it so that if the user is logged in this button appears -->
-          <form class="form-inline mx-2 my-2 my-lg-0" action="/logout" method="post">
+          {{ if .IsAuth }}
+          <form class="form-inline mx-2 my-2 my-lg-0" action="/logout" method="POST">
                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Log Out</button>
           </form>
+          {{ else }}
           <!-- If the user is not logged in, a log-in button should appear -->
-          <form class="form-inline my-2 mx-2 my-lg-0" action="/login" method="post">
+          <form class="form-inline my-2 mx-2 my-lg-0" action="/login" method="GET">
                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Log In</button>
           </form>
+          <form class="form-inline my-2 mx-2 my-lg-0" action="/user/new" method="GET">
+               <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Sign Up</button>
+          </form>
+          {{ end }}
      </nav>
 
 {{ end }}
