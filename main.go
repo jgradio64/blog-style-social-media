@@ -34,44 +34,22 @@ func main () {
 	http.HandleFunc("/loginconfirm", routes.LoginConfirmHandler)
 	http.HandleFunc("/logout", routes.LogoutHandler)
 	
+	// user Post routes
 	http.HandleFunc("/post/", routes.GetPostHandler)
 	http.HandleFunc("/post/new", routes.NewPostHandler)
 	http.HandleFunc("/post/delete/", routes.DeletePostHandler)
 	http.HandleFunc("/post/edit/", routes.EditPostHandler)
 	http.HandleFunc("/deletepostconfirm/", routes.DeletePostConfirmHandler)
 	http.HandleFunc("/postconfirm/", routes.NewPostConfirmHandler)
-	
+
+	// Comment Routes
+	http.HandleFunc("/comment/new/", routes.CreateCommentHandler)
+	http.HandleFunc("/comment/edit/", routes.EditCommentHandler)
+	// http.HandleFunc("/comment/delete/", routes.DeleteCommentHandler)
+
 	// http.HandleFunc("/userview", userviewHandler)	
 	// http.HandleFunc("/postviewconfirm", postviewconfirmHandler)
 	
 	log.Println("server running on port 8000")
 	log.Fatal(http.ListenAndServe("localhost:8000", nil))
-}
-
-func indexHandler(w http.ResponseWriter, r *http.Request) {
-	page := &Data{Body:"Welcome to our brand new landing page."}
-    renderTemplate(w, "index", page)
-}
-
-// func homepageHandler(w http.ResponseWriter, r *http.Request) {
-
-// 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-// 	fmt.Fprintf(w, HOMEPAGE)
-	
-// }
-
-func renderHomePage(w http.ResponseWriter, tmpl string, page *Data) {
-    err := templates.ExecuteTemplate(w, tmpl, page)
-    if err != nil {
-         http.Error(w, err.Error(), http.StatusInternalServerError)
-         return
-    }
-}
-
-func renderTemplate(w http.ResponseWriter, tmpl string, page *Data) {
-    err := templates.ExecuteTemplate(w, tmpl, page)
-    if err != nil {
-         http.Error(w, err.Error(), http.StatusInternalServerError)
-         return
-    }
 }

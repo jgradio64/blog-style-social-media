@@ -1,0 +1,16 @@
+{{define "comment_edit"}}
+{{template "header" .}}
+{{template "nav" .}}
+
+<div class="container">
+    <form action="/comment/edit/?id={{.Com.CommentID}}" method="POST">
+        <div class="form-group">
+            <label for="postText">Comment Text:</label>
+            <textarea class="form-control" id="postText" name="comment_text" rows="4">{{ .Com.Content }}</textarea>
+        </div>
+        <button class="btn btn-success my-2 my-sm-0" type="submit">Submit</button>
+    </form>
+</div>
+
+{{template "footer" .}}
+{{end}}

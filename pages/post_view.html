@@ -11,7 +11,7 @@
         <p class="lead">{{ .ThePost.PostContent }}</p>
         </div>
         {{ if .IsOwner }}
-        <!-- Display edit and delete user buttons if the user is not the owner -->
+        <!-- Display edit and delete user buttons if the user is the owner -->
         <a href="/post/edit/?id={{.ThePost.PostID}}" class="btn btn-success my-2 my-sm-0">Edit Post</a>
         <a href="/post/delete/?id={{.ThePost.PostID}}" class="btn btn-success my-2 my-sm-0">Delete Post</a>
         {{ end }}
@@ -20,7 +20,7 @@
    {{ if .IsAuth }}
    	<div class="card my-4">
 		<div class="card-body">
-			<form action="/" method="GET">
+			<form action="/comment/new/" method="POST">
 				<div class=""form-group>
 					<label for="comment_text">Add a comment</label>
 					<textarea class="form-control" id="comment_text" name="comment_text" rows="3" required></textarea>	
@@ -41,6 +41,10 @@
             <h4 class="card-header"><a href="/user/?id={{.UserID}}">{{ .Author }}</a> on {{ .DateCreated.Format "2006-01-02"}}</h4>
             <div class="card-body">
                 <p class="card-test">{{ .Content }}</p>
+                {{ if eq $.AuthUserID .UserID }}
+                <a href="/comment/edit/?id={{.CommentID}}" class="btn btn-success my-2 my-sm-0">Edit Comment</a>
+                <a href="/comment/delete/?id={{.CommentID}}" class="btn btn-success my-2 my-sm-0">Delete Comment</a>
+                {{ end }}
             </div>
         </div>
     {{ end }}
