@@ -5,8 +5,6 @@ import (
 	"strconv"
 	"time"
 	"fmt"
-	_ "html/template"
-
 
 	models "blbr.com/main/models"
 	extns "blbr.com/main/extensions"
@@ -83,17 +81,12 @@ func EditPostHandler(w http.ResponseWriter, r *http.Request) {
 			post.PostContent = r.FormValue("postContent")
 			post.UpdatePost()
 
-			post = post.GetPost()
-			prettyPost, err := extns.PrettyStruct(post)
-			extns.CheckError(err)
-			fmt.Println(prettyPost)
-
 			fmt.Fprintf(w, "<h1>Post Successfully Edited</h1>")
 			if f, ok := w.(http.Flusher); ok {
 				f.Flush()
 				time.Sleep(1 * time.Second)
 			}
-			fmt.Fprintf(w, `<script>window.location.href="/";</script>`) 
+			fmt.Fprintf(w, "<script>window.location.href=\"/post/?id=%v\";</script>", id) 
 		default:
 			fmt.Fprintf(w, "Sorry, only GET and POST methods are supported.")
 		}

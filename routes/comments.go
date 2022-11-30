@@ -5,8 +5,6 @@ import (
 	"strconv"
 	"time"
 	"fmt"
-	_ "html/template"
-
 
 	models "blbr.com/main/models"
 	extns "blbr.com/main/extensions"

@@ -3,16 +3,10 @@ package main
 import (
 	"log"
 	"net/http"
-	"html/template"
+	//"html/template"
 	routes "blbr.com/main/routes"
 
 )
-
-type Data struct {
-	Body string
-}
-
-var templates = template.Must(template.ParseGlob("pages/*"))
 
 // Just handles the route functions
 func main () {
@@ -49,9 +43,6 @@ func main () {
 	http.HandleFunc("/comment/edit/", routes.EditCommentHandler)
 	http.HandleFunc("/comment/delete/", routes.DeleteCommentHandler)
 
-	// http.HandleFunc("/userview", userviewHandler)	
-	// http.HandleFunc("/postviewconfirm", postviewconfirmHandler)
-	
 	log.Println("server running on port 8000")
 	log.Fatal(http.ListenAndServe("localhost:8000", nil))
 }

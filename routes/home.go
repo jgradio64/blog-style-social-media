@@ -1,12 +1,9 @@
 package routes
  
 import (
-    _ "fmt"
 	"net/http"
-	_ "time"
-	_ "html/template"
+
 	models "blbr.com/main/models"
-	//extns "blbr.com/main/extensions"
 )
 
 type HomepageData struct {
