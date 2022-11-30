@@ -48,7 +48,7 @@ func LoginConfirmHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	
 	sessionToken := uuid.NewString()
-	expiresAt := time.Now().Add(120 * time.Second)
+	expiresAt := time.Now().Add(600 * time.Second)
 	
 	sessions[sessionToken] = Session{
 		Username: user.Username,
@@ -113,7 +113,7 @@ func RefreshSession(w http.ResponseWriter, r *http.Request) {
 	userSession := sessions[c.Value]
 	
 	newSessionToken := uuid.NewString()
-	expiresAt := time.Now().Add(120 * time.Second)
+	expiresAt := time.Now().Add(600 * time.Second)
 
 	sessions[newSessionToken] = Session{
 		Username: userSession.Username,

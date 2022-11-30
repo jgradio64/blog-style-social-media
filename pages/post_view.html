@@ -1,17 +1,56 @@
-<h1>Find Posts<h1>
-<form action="/postviewconfirm" method="POST">
-	<label for="Username">Username: </label>
-	<input id="Username" type="text" name="Username"></div><br>
-	<p style="font-size: 12px;">empty: posts of myself; all: posts from all users; username: posts from a certain user </p>
-	
-	<label for="Start">Start date:</label>
-	<input id="Start" type="date" name="Start"></div>
-	<p style="font-size: 12px;">default: 60 days ago</p>
-	
-	<label for="End">End date: </label>
-	<input id="End" type="date" name="End"></div>
-	<p style="font-size: 12px;">default: today </p>
+{{define "post"}}
+{{template "header" .}}
+{{template "nav" .}}
 
-	<div><input type="submit"> <input type="reset"></div>
-	
-</form>
+<div class="container">
+    <main class="jumbotron">
+        <div class="text-center p-5">
+        <h1>{{ .ThePost.PostTitle }}</h1>
+		<p>Post By <a href="/user/?id={{.ThePost.UserID}}">{{ .ThePost.Author }}</a> on {{ .ThePost.PostDate.Format "2006-01-02"}}</p>
+        <hr>
+        <p class="lead">{{ .ThePost.PostContent }}</p>
+        </div>
+        {{ if .IsOwner }}
+        <!-- Display edit and delete user buttons if the user is not the owner -->
+        <form class="form-inline my-2 mx-2 my-lg-0" action="/post/edit" method="GET">
+			<input type="hidden" name="post_id" value="{{.ThePost.PostID}}">
+            <button class="btn btn-success my-2 my-sm-0" type="submit">Edit Post</button>
+        </form>
+        <form class="form-inline my-2 mx-2 my-lg-0" action="/post/delete" method="DELETE">
+			<input type="hidden" name="post_id" value="{{.ThePost.PostID}}">
+            <button class="btn btn-warning my-2 my-sm-0" type="submit">Delete Post</button>
+        </form>
+        {{ end }}
+   </main>
+
+   {{ if .IsAuth }}
+   	<div class="card my-4">
+		<div class="card-body">
+			<form action="/" method="GET">
+				<div class=""form-group>
+					<label for="comment_text">Add a comment</label>
+					<textarea class="form-control" id="comment_text" name="comment_text" rows="3" required></textarea>	
+				</div>
+				<input type="hidden" name="post_id" value="{{.ThePost.PostID}}">
+				<button class="btn btn-success my-2 my-sm-0" type="submit">Submit</button>
+			</form>
+	   	</div>
+   	</div>
+	{{ end }}
+
+	<div class="text-center p-5">
+        <h2>Enjoy the comments!</h2>
+    </div>
+
+    {{ range .ThePost.Comments }}
+        <div class="card my-4">
+            <h4 class="card-header"><a href="/user/?id={{.UserID}}">{{ .Author }}</a> on {{ .DateCreated.Format "2006-01-02"}}</h4>
+            <div class="card-body">
+                <p class="card-test">{{ .Content }}</p>
+            </div>
+        </div>
+    {{ end }}
+</div>
+
+{{template "footer" .}}
+{{end}}

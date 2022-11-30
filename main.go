@@ -20,26 +20,23 @@ func main () {
 	http.HandleFunc("/home/", routes.HomepageHandler)
 	http.HandleFunc("/all/", routes.AllPageHandler)
 
+	// User routes
 	http.HandleFunc("/user/", routes.GetUserHandler)
 	http.HandleFunc("/user/new", routes.SignupHandler)
 	http.HandleFunc("/user/edit", routes.EditUserHandler)
 	http.HandleFunc("/user/delete", routes.DeleteUserHandler)
-
 	http.HandleFunc("/usereditconfirm", routes.EditUserConfirmHandler)
+	http.HandleFunc("/userdeleteconfirm", routes.DeleteUserConfirmHandler)	
 	http.HandleFunc("/signupconfirm", routes.CreateUserHandler)
 	
 	// auth Routes
 	http.HandleFunc("/login", routes.LoginHandler)
 	http.HandleFunc("/loginconfirm", routes.LoginConfirmHandler)
 	http.HandleFunc("/logout", routes.LogoutHandler)
-
-	//http.HandleFunc("/user/", routes.GetUserHandler)
-	// http.HandleFunc("/usereditconfirm", routes.EditUserConfirmHandler)
 	
-	http.HandleFunc("/userdeleteconfirm", routes.DeleteUserConfirmHandler)	
-
-	// http.HandleFunc("/post", postHandler)
-	// http.HandleFunc("/postconfirm", postconfirmHandler)
+	http.HandleFunc("/post/", routes.GetPostHandler)
+	http.HandleFunc("/post/new", routes.NewPostHandler)
+	http.HandleFunc("/postconfirm", routes.NewPostConfirmHandler)
 	
 	// http.HandleFunc("/userview", userviewHandler)
 	// http.HandleFunc("/userviewconfirm", userviewconfirmHandler)

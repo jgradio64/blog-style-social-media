@@ -38,8 +38,9 @@
             <div class="card-body">
                 <h5 class="card-title">{{ .PostTitle }}</h5>
                 <p class="card-test">{{ .PostContent }}</p>
+                <a href="/post/?id={{.PostID}}" class="btn btn-primary">View comments</a>
             </div>
-            <div class="card-footer ">{{.NumOfLikes}} Likes | {{.NumComments}} Comments</div>
+            <div class="card-footer">{{.NumOfLikes}} Likes | {{.NumComments}} Comments</div>
         </div>
     {{ end }}
 </div>
