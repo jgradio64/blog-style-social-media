@@ -12,8 +12,8 @@
         </div>
         {{ if .IsOwner }}
         <!-- Display edit and delete user buttons if the user is the owner -->
-        <a href="/post/edit/?id={{.ThePost.PostID}}" class="btn btn-success my-2 my-sm-0">Edit Post</a>
-        <a href="/post/delete/?id={{.ThePost.PostID}}" class="btn btn-success my-2 my-sm-0">Delete Post</a>
+        <a href="/post/edit/?id={{.ThePost.PostID}}" class="btn btn-primary my-2 my-sm-0">Edit Post</a>
+        <a href="/post/delete/?id={{.ThePost.PostID}}" class="btn btn-warning my-2 my-sm-0">Delete Post</a>
         {{ end }}
    </main>
 
@@ -32,18 +32,14 @@
    	</div>
 	{{ end }}
 
-	<div class="text-center p-5">
-        <h2>Enjoy the comments!</h2>
-    </div>
-
     {{ range .ThePost.Comments }}
         <div class="card my-4">
             <h4 class="card-header"><a href="/user/?id={{.UserID}}">{{ .Author }}</a> on {{ .DateCreated.Format "2006-01-02"}}</h4>
             <div class="card-body">
                 <p class="card-test">{{ .Content }}</p>
                 {{ if eq $.AuthUserID .UserID }}
-                <a href="/comment/edit/?id={{.CommentID}}" class="btn btn-success my-2 my-sm-0">Edit Comment</a>
-                <a href="/comment/delete/?id={{.CommentID}}" class="btn btn-success my-2 my-sm-0">Delete Comment</a>
+                <a href="/comment/edit/?id={{.CommentID}}" class="btn btn-primary my-2 my-sm-0">Edit Comment</a>
+                <a href="/comment/delete/?id={{.CommentID}}" class="btn btn-warning my-2 my-sm-0">Delete Comment</a>
                 {{ end }}
             </div>
         </div>
