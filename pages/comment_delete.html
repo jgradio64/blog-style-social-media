@@ -1,0 +1,21 @@
+<h1>Are you sure you want to delete your profile?</h1>
+<h2> All your posts will be deleted. </h2>
+<form action="/userdeleteconfirm" method="DELETE">
+
+	<div><input type="submit" value="Confirm Delete"></div>
+	
+</form>
+
+{{define "comment_delete"}}
+{{template "header" .}}
+{{template "nav" .}}
+
+    <div class="container">
+        <h1>Are you sure you want to delete your comment?</h1>
+        <form action="/comment/delete/?id={{.Com.CommentID}}" method="post">
+            <button class="btn btn-success my-2 my-sm-0" type="submit">Submit</button>
+        </form>
+    </div>
+
+{{template "footer" .}}
+{{end}}

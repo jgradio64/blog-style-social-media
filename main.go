@@ -45,7 +45,7 @@ func main () {
 	// Comment Routes
 	http.HandleFunc("/comment/new/", routes.CreateCommentHandler)
 	http.HandleFunc("/comment/edit/", routes.EditCommentHandler)
-	// http.HandleFunc("/comment/delete/", routes.DeleteCommentHandler)
+	http.HandleFunc("/comment/delete/", routes.DeleteCommentHandler)
 
 	// http.HandleFunc("/userview", userviewHandler)	
 	// http.HandleFunc("/postviewconfirm", postviewconfirmHandler)
