@@ -3,9 +3,8 @@ package main
 import (
 	"log"
 	"net/http"
-	//"html/template"
-	routes "blbr.com/main/routes"
 
+	routes "blbr.com/main/routes"
 )
 
 // Just handles the route functions
