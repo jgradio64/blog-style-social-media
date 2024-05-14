@@ -26,7 +26,7 @@ This was our idea for a class project that needed to be written in the language 
     - Handles front end conditional logic when rendering html templates.
 - [PostgreSQL](https://www.postgresql.org/)
 - [PG Admin](https://www.pgadmin.org/)
-    - Used to creating and managing the dataabse.
+    - Used to creating and managing the database.
 - [Digital Ocean](https://www.pgadmin.org/)
     - Cloud provider used to host the PostgreSQL database.
 - [Google uuid](https://github.com/google/uuid)
